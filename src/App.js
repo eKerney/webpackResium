@@ -1,10 +1,16 @@
 import React from "react";
-import './App.css';
-function App() {
-    return (
-        <div>
-            <h1>My React Map is better than App</h1>
-        </div>
-    );
+import { Cartesian3, Color } from "cesium";
+import { Viewer, Entity } from "resium";
+
+export default function App() {
+  return (
+    <Viewer full>
+      <Entity
+        name="Tokyo"
+        position={Cartesian3.fromDegrees(139.767052, 35.681167, 100)}
+        point={{ pixelSize: 10, color: Color.WHITE }}
+        description="This is not a HOGIE"
+      />
+    </Viewer>
+  );
 }
-export default App;
