@@ -14,6 +14,7 @@ function LayerControl(props) {
   const [MDOTairTraffic, setMDOTairTraffic ] = useState(false);
   const [testLayer, setTestLayer ] = useState(false);
   const [GPSall, setGPSall ] = useState(false);
+  const [surface, setSurface ] = useState(false);
 
   const handleChange = (event) => {
     console.log('In handleChange()');
@@ -25,6 +26,7 @@ function LayerControl(props) {
     event.target.name === 'MDOT' ? setMDOTairTraffic(!MDOTairTraffic) : setMDOTairTraffic(MDOTairTraffic);
     event.target.name === 'TEST' ? setTestLayer(!testLayer) : setTestLayer(testLayer);
     event.target.name === 'GPSALL' ? setGPSall(!GPSall) : setGPSall(GPSall);
+    event.target.name === 'SURFACE' ? setSurface(!surface) : setSurface(surface);
   };
   const pdopColor = {
     1:Color.GREEN, 2:Color.CHARTREUSE, 3:Color.GREENYELLOW, 4:Color.YELLOW, 5:Color.DARKORANGE, 6:Color.RED
@@ -42,10 +44,11 @@ function LayerControl(props) {
 
   const renderTestLayer = React.useMemo(() => {
     return (  
-      <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/FAAUAS.geojson.json"} 
+      <GeoJsonDataSource data={"https://services5.arcgis.com/DzCDf9ACTMZgB0Wd/ArcGIS/rest/services/Insights_Data_FAA_UAS_FacilityMap_Data_V5_Polygon_View_PROD/FeatureServer/0/query?where=APT1_ICAO%3D%27KPDT%27&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnHiddenFields=false&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token=iowXlDMo8nbI9sQRjhNGWDLgHGQ85_42fAR82PWsC7LQvgGVmsG03scxoNprrqYqvY3egsPyqo0oalBlCVjSGApHCe3fUxve22g-AMCHy2FQG-XexCs2GxT5JlN5JhVch_6PfVZCDlIq-MoV4xrv372PlZ8f04nTfKEQmGUrYiQdK7J1T8nnRW3XbJkb1_Dn3lGmzhrCIQs8TWpQvLAJ2zdZJm6gww_aO-Zl6oEJrgE_wRifOryCJ16jswQVrfDoQSB6AwyyUT4Il0tnXUEtgm_hF1cPHxpKAWVML21LtRQ."} 
         onLoad={d => {d.entities.values.forEach(d => {
-          //console.log(d._properties);
+          //console.log(d._properties.CEILING);
           const h = (d._properties.CEILING);
+          //const den = d._properties.density;
           d.polygon.height = 0;
           d.polygon.extrudedHeight = (d._properties.CEILING);
           d.polygon.material = h == (0) ? Color.RED.withAlpha(0.5) : h <= (100) ? Color.ORANGERED.withAlpha(0.4) : 
@@ -56,6 +59,27 @@ function LayerControl(props) {
       />
     )
   }, [testLayer]);
+  
+  const renderSurfaceLayer = React.useMemo(() => {
+    return (  
+      <GeoJsonDataSource data={"https://services5.arcgis.com/DzCDf9ACTMZgB0Wd/ArcGIS/rest/services/PendletonOR_SuitabilitySurface/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnHiddenFields=false&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token=cVUmOdxDPyNvW51x2g66IFvZkk1rHCkd1CwM8qIYfQ-3HcyQeOqC3qIVxkKfBQFSYRY6YUVi5sKRJwugq_Pwh4a_bpf-Bhh6-QiB_EiVWBdTH9dVzLIWMPNyLqb02wMnynElEB-vfp7q02G2JHma6Eae8-sJqjPDd5JDGdVzgKmHiv721ysc84Z8ziL9pc8E2lsiRhni3mwS0rVkN4zJ6-YfAR9nvDVDxWg_qhINZ44ghSED3w8Sd6l8rQYcUxCtmtUdpYF9Sy046NJQmDzDnUD1KlDrmZKa2ft5bgYmTN8."} 
+        onLoad={d => {d.entities.values.forEach(d => {
+          //console.log(d._properties.CEILING);
+         //const h = (d._properties.CEILING);
+          //const den = d._properties.density;
+          // d.polygon.height = 0;
+          // d.polygon.extrudedHeight = (d._properties.CEILING);
+          // d.polygon.material = h == (0) ? Color.RED.withAlpha(0.5) : h <= (100) ? Color.ORANGERED.withAlpha(0.4) : 
+          // h <= (200) ? Color.ORANGE.withAlpha(0.3) : h <= (300) ? Color.GREEN.withAlpha(0.2) : Color.LIGHTGREEN.withAlpha(0.2); 
+        console.log(d._properties);
+        d.polygon.material = Color.ALICEBLUE;
+        })
+        }} 
+         
+        stroke={Color.GREY.withAlpha(0.1)}   
+      />
+    )
+  }, [surface]);
 
   const renderMDOTairTraffic = React.useMemo(() => {
     return ( 
@@ -146,9 +170,9 @@ function LayerControl(props) {
         <br />
       <FormGroup>
         <FormControlLabel control={<Checkbox name='BUILDINGS' checked={buildings} color="secondary" onChange={handleChange}/>} label="3D Buildings" />
-        <FormControlLabel control={<Checkbox name='TEST' checked={testLayer} color="secondary" onChange={handleChange}/>} label="UAS Facility Map" />
         <FormControlLabel control={<Checkbox name='MDOT' checked={MDOTairTraffic} color="secondary" onChange={handleChange}/>} label="MDOT AIR Traffic Density" />
-        {/* <FormControlLabel control={<Checkbox name='MDOT' checked={MDOTairTraffic} color="secondary" onChange={handleChange}/>} label="MDOT Air Traffic Density" /> */}
+        <FormControlLabel control={<Checkbox name='TEST' checked={testLayer} color="secondary" onChange={handleChange}/>} label="UAS Facility Map" />
+        <FormControlLabel control={<Checkbox name='SURFACE' checked={surface} color="secondary" onChange={handleChange}/>} label="Pendleton Suitability Surface" />
         <FormControlLabel control={<Checkbox name='GPS003' checked={GPS003} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 3 meters" />
         <FormControlLabel control={<Checkbox name='GPS050' checked={GPS050} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 50 meters " />
         <FormControlLabel control={<Checkbox name='GPS100' checked={GPS100} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 100 meters " />
@@ -162,6 +186,7 @@ function LayerControl(props) {
     { GPS050 && renderGPS050 }
     { GPS100 && renderGPS100 }
     { testLayer && renderTestLayer }
+    { surface && renderSurfaceLayer }
       {/* { MDOTairTraffic && 
       <GeoJSON dataURL={'https://raw.githubusercontent.com/eKerney/dataStore/main/mdotDensitySelection.geojson'} 
         symbolObj={pdopColor} heightExtrude={[0,100]} symbolProp={'density'} />
