@@ -14,6 +14,9 @@ function LayerControl(props) {
   const [MDOTairTraffic, setMDOTairTraffic ] = useState(false);
   const [testLayer, setTestLayer ] = useState(false);
   const [GPSall, setGPSall ] = useState(false);
+  const [MDOTcor, setMDOTcor ] = useState(false);
+  const [DETroute, setDETroute ] = useState(false);
+  const [MDOTsurface, setMDOTsurface ] = useState(false);
 
   const handleChange = (event) => {
     console.log('In handleChange()');
@@ -25,6 +28,9 @@ function LayerControl(props) {
     event.target.name === 'MDOT' ? setMDOTairTraffic(!MDOTairTraffic) : setMDOTairTraffic(MDOTairTraffic);
     event.target.name === 'TEST' ? setTestLayer(!testLayer) : setTestLayer(testLayer);
     event.target.name === 'GPSALL' ? setGPSall(!GPSall) : setGPSall(GPSall);
+    event.target.name === 'MDOTCOR' ? setMDOTcor(!MDOTcor) : setMDOTcor(MDOTcor);
+    event.target.name === 'DETROUTE' ? setDETroute(!DETroute) : setDETroute(DETroute);
+    event.target.name === 'MDOTSURFACE' ? setMDOTsurface(!MDOTsurface) : setMDOTsurface(MDOTsurface);
   };
   const pdopColor = {
     1:Color.GREEN, 2:Color.CHARTREUSE, 3:Color.GREENYELLOW, 4:Color.YELLOW, 5:Color.DARKORANGE, 6:Color.RED
@@ -39,6 +45,49 @@ function LayerControl(props) {
     4:Color.YELLOW.withAlpha(0.3), 5:Color.DARKORANGE.withAlpha(0.3), 6:Color.RED.withAlpha(0.3),
     '-99999':Color.GREY.withAlpha(0.3)
   };
+// 
+
+const renderMDOTsurface = React.useMemo(() => {
+  return (  
+    <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/mdotSmallSurface.geojson"} 
+      onLoad={d => {d.entities.values.forEach(d => {
+        const h = (d._properties.population);
+        d.polygon.material = h > (50000) ? Color.RED.withAlpha(0.5) : h >= (25000) ? Color.ORANGERED.withAlpha(0.4) : 
+        h >= (10000) ? Color.ORANGE.withAlpha(0.3) : h >= (5000) ? Color.GREEN.withAlpha(0.2) : h >= (1000) ? Color.GREEN.withAlpha(0.1) : Color.LIGHTGREEN.withAlpha(0.1); 
+        })
+      }}  
+      stroke={Color.BLUEVIOLET.withAlpha(0.0)}   
+    />
+  )
+}, [MDOTsurface]);
+
+  const renderDETroute = React.useMemo(() => {
+    return (  
+      <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/detRoute2.json"} 
+        onLoad={d => {d.entities.values.forEach(d => {
+          //console.log(d._properties);
+          d.polygon.height = 200;
+          d.polygon.extrudedHeight = 300;
+          d.polygon.material = Color.DEEPPINK.withAlpha(0.4);
+        })
+        }}  
+        stroke={Color.BLUEVIOLET.withAlpha(0.5)}   
+      />
+    )
+  }, [DETroute]);
+
+  const renderMDOTCor = React.useMemo(() => {
+    return (  
+      <GeoJsonDataSource data={"https://services5.arcgis.com/DzCDf9ACTMZgB0Wd/ArcGIS/rest/services/Corridor/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="} 
+        // onLoad={d => {d.entities.values.forEach(d => {
+        //   console.log(d._properties);
+        //   h <= (200) ? Color.ORANGE.withAlpha(0.3) : h <= (300) ? Color.GREEN.withAlpha(0.2) : Color.LIGHTGREEN.withAlpha(0.2); 
+        // })
+        // }}  
+        //stroke={Color.GREY.withAlpha(0.5)}   
+      />
+    )
+  }, [MDOTcor]);
 
   const renderTestLayer = React.useMemo(() => {
     return (  
@@ -120,7 +169,6 @@ function LayerControl(props) {
     />
     )
   }, [GPS050]);
-
   const renderGPS100 = React.useMemo(() => {
     return (
       <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore/main/spirent_gps_202204.geojson"}
@@ -145,6 +193,7 @@ function LayerControl(props) {
         <hr style={{width: '800px', marginLeft: '-100px', marginTop: '26px'}}/>
         <br />
       <FormGroup>
+        <FormControlLabel control={<Checkbox name='MDOTCOR' checked={MDOTcor} color="secondary" onChange={handleChange}/>} label="MDOT Corrdior" />
         <FormControlLabel control={<Checkbox name='BUILDINGS' checked={buildings} color="secondary" onChange={handleChange}/>} label="3D Buildings" />
         <FormControlLabel control={<Checkbox name='TEST' checked={testLayer} color="secondary" onChange={handleChange}/>} label="UAS Facility Map" />
         <FormControlLabel control={<Checkbox name='MDOT' checked={MDOTairTraffic} color="secondary" onChange={handleChange}/>} label="MDOT AIR Traffic Density" />
@@ -152,7 +201,8 @@ function LayerControl(props) {
         <FormControlLabel control={<Checkbox name='GPS003' checked={GPS003} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 3 meters" />
         <FormControlLabel control={<Checkbox name='GPS050' checked={GPS050} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 50 meters " />
         <FormControlLabel control={<Checkbox name='GPS100' checked={GPS100} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 100 meters " />
-
+        <FormControlLabel control={<Checkbox name='DETROUTE' checked={DETroute} color="secondary" onChange={handleChange}/>} label="Detroit Test Route" />
+        <FormControlLabel control={<Checkbox name='MDOTSURFACE' checked={MDOTsurface} color="secondary" onChange={handleChange}/>} label="MDOT Suitability Surface" />
         {/* <FormControlLabel control={<Checkbox name='GPSALL' checked={GPSall} color="secondary" onChange={handleChange}/>} label="GPS ALL" /> */}
       </FormGroup>
     </div>
@@ -162,6 +212,9 @@ function LayerControl(props) {
     { GPS050 && renderGPS050 }
     { GPS100 && renderGPS100 }
     { testLayer && renderTestLayer }
+    { MDOTcor && renderMDOTCor }
+    { DETroute && renderDETroute }
+    { MDOTsurface && renderMDOTsurface }
       {/* { MDOTairTraffic && 
       <GeoJSON dataURL={'https://raw.githubusercontent.com/eKerney/dataStore/main/mdotDensitySelection.geojson'} 
         symbolObj={pdopColor} heightExtrude={[0,100]} symbolProp={'density'} />
