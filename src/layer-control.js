@@ -64,7 +64,7 @@ const renderMDOTsurface = React.useMemo(() => {
   const renderDETroute = React.useMemo(() => {
     return (  
       <>
-      <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/MCtoHF-LCP-HEX-10.json"} 
+      <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/MCtoHF-LCP-HEX-10-ATTR.json"} 
         onLoad={d => {d.entities.values.forEach(d => {
           //console.log(d._properties);
           d.polygon.height = 200;
