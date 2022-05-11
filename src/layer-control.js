@@ -63,7 +63,8 @@ const renderMDOTsurface = React.useMemo(() => {
 
   const renderDETroute = React.useMemo(() => {
     return (  
-      <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/detRoute2.json"} 
+      <>
+      <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/MCtoHF-LCP-HEX-10.json"} 
         onLoad={d => {d.entities.values.forEach(d => {
           //console.log(d._properties);
           d.polygon.height = 200;
@@ -73,6 +74,17 @@ const renderMDOTsurface = React.useMemo(() => {
         }}  
         stroke={Color.BLUEVIOLET.withAlpha(0.5)}   
       />
+      <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/MCtoHF-LCP-LINE.geojson"} 
+        onLoad={d => {d.entities.values.forEach(d => {
+          console.log(d.polyline);
+          d.polyline.width = 5;
+          // d.polygon.extrudedHeight = 300;
+          // d.polygon.material = Color.DEEPPINK.withAlpha(0.4);
+        })
+        }}  
+        stroke={Color.BLUEVIOLET.withAlpha(0.5)}   
+      />
+      </>
     )
   }, [DETroute]);
 
@@ -93,10 +105,11 @@ const renderMDOTsurface = React.useMemo(() => {
     return (  
       <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/FAAUAS.geojson.json"} 
         onLoad={d => {d.entities.values.forEach(d => {
-          //console.log(d._properties);
           const h = (d._properties.CEILING);
           d.polygon.height = 0;
           d.polygon.extrudedHeight = (d._properties.CEILING);
+          d.polygon.extrudedHeight = h == (0) ? 500 : h <= (50) ? 400 : h <= (100) ? 300 : h <= (200) ? 200 : h <= (300) ? 50 : 0; 
+
           d.polygon.material = h == (0) ? Color.RED.withAlpha(0.5) : h <= (100) ? Color.ORANGERED.withAlpha(0.4) : 
           h <= (200) ? Color.ORANGE.withAlpha(0.3) : h <= (300) ? Color.GREEN.withAlpha(0.2) : Color.LIGHTGREEN.withAlpha(0.2); 
         })
@@ -130,7 +143,7 @@ const renderMDOTsurface = React.useMemo(() => {
           d.polygon.extrudedHeight = (d._properties.median_hgt * 2);
           const h = d._properties.median_hgt;
           d.polygon.material = h > (700) ? Color.NAVY.withAlpha(0.5) : h > (400) ? Color.TEAL.withAlpha(0.5) : h > (200) ? Color.LIGHTSEAGREEN.withAlpha(0.5) : 
-          h > (100) ? Color.MEDIUMTURQUOISE.withAlpha(0.6) : h > (50) ? Color.PALETURQUOISE.withAlpha(0.6) : Color.ALICEBLUE.withAlpha(0.5); 
+          h > (100) ? Color.MEDIUMTURQUOISE.withAlpha(0.4) : h > (50) ? Color.PALETURQUOISE.withAlpha(0.4) : Color.ALICEBLUE.withAlpha(0.4); 
         })
         }}
         stroke={Color.AQUA.withAlpha(0.0)}
@@ -193,17 +206,19 @@ const renderMDOTsurface = React.useMemo(() => {
         <hr style={{width: '800px', marginLeft: '-100px', marginTop: '26px'}}/>
         <br />
       <FormGroup>
-        <FormControlLabel control={<Checkbox name='MDOTCOR' checked={MDOTcor} color="secondary" onChange={handleChange}/>} label="MDOT Corrdior" />
-        <FormControlLabel control={<Checkbox name='BUILDINGS' checked={buildings} color="secondary" onChange={handleChange}/>} label="3D Buildings" />
+      <FormControlLabel control={<Checkbox name='BUILDINGS' checked={buildings} color="secondary" onChange={handleChange}/>} label="3D Buildings" />
+        
+        <FormControlLabel control={<Checkbox name='MDOTSURFACE' checked={MDOTsurface} color="secondary" onChange={handleChange}/>} label="MDOT Suitability Surface" />
+        <FormControlLabel control={<Checkbox name='DETROUTE' checked={DETroute} color="secondary" onChange={handleChange}/>} label="Central to Henry Ford LC Path" />
+
         <FormControlLabel control={<Checkbox name='TEST' checked={testLayer} color="secondary" onChange={handleChange}/>} label="UAS Facility Map" />
         <FormControlLabel control={<Checkbox name='MDOT' checked={MDOTairTraffic} color="secondary" onChange={handleChange}/>} label="MDOT AIR Traffic Density" />
-        {/* <FormControlLabel control={<Checkbox name='MDOT' checked={MDOTairTraffic} color="secondary" onChange={handleChange}/>} label="MDOT Air Traffic Density" /> */}
+        
         <FormControlLabel control={<Checkbox name='GPS003' checked={GPS003} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 3 meters" />
         <FormControlLabel control={<Checkbox name='GPS050' checked={GPS050} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 50 meters " />
         <FormControlLabel control={<Checkbox name='GPS100' checked={GPS100} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 100 meters " />
-        <FormControlLabel control={<Checkbox name='DETROUTE' checked={DETroute} color="secondary" onChange={handleChange}/>} label="Detroit Test Route" />
-        <FormControlLabel control={<Checkbox name='MDOTSURFACE' checked={MDOTsurface} color="secondary" onChange={handleChange}/>} label="MDOT Suitability Surface" />
-        {/* <FormControlLabel control={<Checkbox name='GPSALL' checked={GPSall} color="secondary" onChange={handleChange}/>} label="GPS ALL" /> */}
+        <FormControlLabel control={<Checkbox name='MDOTCOR' checked={MDOTcor} color="secondary" onChange={handleChange}/>} label="MDOT Corrdior" />
+        
       </FormGroup>
     </div>
     {MDOTairTraffic && renderMDOTairTraffic} 
