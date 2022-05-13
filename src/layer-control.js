@@ -3,8 +3,9 @@ import React from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import { FormControlLabel, FormGroup } from '@mui/material';
 import {useState, useEffect, useMemo, useCallback, useRef} from 'react';
-import { GeoJsonDataSource, Viewer } from 'resium';
-import { Color } from "cesium";
+import { GeoJsonDataSource } from 'resium';
+import { Viewer, Scene, Globe, Camera, CameraLookAt, CameraFlyTo, Entity} from "resium";
+import { Cartesian3, Color, Math, HeadingPitchRange } from "cesium";
 
 function LayerControl(props) {
   const [buildings, setBuildings ] = useState(false);
@@ -78,6 +79,7 @@ const renderMDOTsurface = React.useMemo(() => {
         onLoad={d => {d.entities.values.forEach(d => {
           console.log(d.polyline);
           d.polyline.width = 5;
+          //d.polyline.glowPower =  1;
           // d.polygon.extrudedHeight = 300;
           // d.polygon.material = Color.DEEPPINK.withAlpha(0.4);
         })
@@ -107,11 +109,11 @@ const renderMDOTsurface = React.useMemo(() => {
         onLoad={d => {d.entities.values.forEach(d => {
           const h = (d._properties.CEILING);
           d.polygon.height = 0;
-          d.polygon.extrudedHeight = (d._properties.CEILING);
-          d.polygon.extrudedHeight = h == (0) ? 500 : h <= (50) ? 400 : h <= (100) ? 300 : h <= (200) ? 200 : h <= (300) ? 50 : 0; 
+          //d.polygon.extrudedHeight = (d._properties.CEILING);
+          d.polygon.extrudedHeight = h == (0) ? 1000 : h <= (50) ? 600 : h <= (100) ? 300 : h <= (200) ? 200 : h <= (300) ? 50 : 0; 
 
-          d.polygon.material = h == (0) ? Color.RED.withAlpha(0.5) : h <= (100) ? Color.ORANGERED.withAlpha(0.4) : 
-          h <= (200) ? Color.ORANGE.withAlpha(0.3) : h <= (300) ? Color.GREEN.withAlpha(0.2) : Color.LIGHTGREEN.withAlpha(0.2); 
+          d.polygon.material = h == (0) ? Color.RED.withAlpha(0.4) : h <= (100) ? Color.ORANGERED.withAlpha(0.4) : 
+          h <= (200) ? Color.ORANGE.withAlpha(0.3) : h <= (300) ? Color.GREEN.withAlpha(0.3) : Color.LIGHTGREEN.withAlpha(0.3); 
         })
         }}  
         stroke={Color.GREY.withAlpha(0.1)}   
@@ -138,12 +140,12 @@ const renderMDOTsurface = React.useMemo(() => {
 
   const renderBuildings = React.useMemo(() => {
     return (
-      <GeoJsonDataSource data={"https://services5.arcgis.com/UDWrEU6HdWNYIRIV/ArcGIS/rest/services/buildingsClippedDet/FeatureServer/0/query?where=1%3D1&geometry=-83.12%2C+42.23%2C+-83.01%2C+42.39&geometryType=esriGeometryEnvelope&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&sqlFormat=none&f=pgeojson&token="} 
+      <GeoJsonDataSource data={"https://services5.arcgis.com/UDWrEU6HdWNYIRIV/ArcGIS/rest/services/buildingsClippedDet/FeatureServer/0/query?where=1%3D1&geometry=-83.12%2C+42.25%2C+-83.02%2C+42.38&geometryType=esriGeometryEnvelope&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&sqlFormat=none&f=pgeojson&token="} 
         onLoad={d => {d.entities.values.forEach(d => {
-          d.polygon.extrudedHeight = (d._properties.median_hgt * 2);
+          d.polygon.extrudedHeight = (d._properties.median_hgt * 0.3048);
           const h = d._properties.median_hgt;
-          d.polygon.material = h > (700) ? Color.NAVY.withAlpha(0.5) : h > (400) ? Color.TEAL.withAlpha(0.5) : h > (200) ? Color.LIGHTSEAGREEN.withAlpha(0.5) : 
-          h > (100) ? Color.MEDIUMTURQUOISE.withAlpha(0.4) : h > (50) ? Color.PALETURQUOISE.withAlpha(0.4) : Color.ALICEBLUE.withAlpha(0.4); 
+          d.polygon.material = h > (700) ? Color.NAVY.withAlpha(0.5) : h > (400) ? Color.TEAL.withAlpha(0.4) : h > (200) ? Color.LIGHTSEAGREEN.withAlpha(0.4) : 
+          h > (100) ? Color.MEDIUMTURQUOISE.withAlpha(0.4) : h > (50) ? Color.PALETURQUOISE.withAlpha(0.3) : Color.ALICEBLUE.withAlpha(0.4); 
         })
         }}
         stroke={Color.AQUA.withAlpha(0.0)}
@@ -197,7 +199,9 @@ const renderMDOTsurface = React.useMemo(() => {
       />
     )
   }, [GPS100]);
-  
+
+  const position = Cartesian3.fromDegrees(-83.087383, 42.3317244, 100);
+  const pointGraphics = { pixelSize: 10 };
   return  (
   <>
     
@@ -221,6 +225,7 @@ const renderMDOTsurface = React.useMemo(() => {
         
       </FormGroup>
     </div>
+    <Entity position={position} point={pointGraphics} />
     {MDOTairTraffic && renderMDOTairTraffic} 
     {buildings && renderBuildings} 
     { GPS003 && renderGPS003 }
