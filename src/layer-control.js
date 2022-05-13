@@ -225,7 +225,7 @@ const renderMDOTsurface = React.useMemo(() => {
         
       </FormGroup>
     </div>
-    <Entity position={position} point={pointGraphics} />
+    {/* <Entity position={position} point={pointGraphics} /> */}
     {MDOTairTraffic && renderMDOTairTraffic} 
     {buildings && renderBuildings} 
     { GPS003 && renderGPS003 }
