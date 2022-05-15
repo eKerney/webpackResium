@@ -68,12 +68,13 @@ const renderMDOTsurface = React.useMemo(() => {
       <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/MCtoHF-LCP-HEX-10-ATTR.json"} 
         onLoad={d => {d.entities.values.forEach(d => {
           //console.log(d._properties);
-          d.polygon.height = 200;
-          d.polygon.extrudedHeight = 300;
-          d.polygon.material = Color.DEEPPINK.withAlpha(0.4);
+          const hexHeight = d._properties.altitude - 25;
+          d.polygon.height = hexHeight;
+          d.polygon.extrudedHeight = hexHeight + 25;
+          d.polygon.material = Color.DEEPPINK.withAlpha(0.2);
         })
         }}  
-        stroke={Color.BLUEVIOLET.withAlpha(0.5)}   
+        stroke={Color.BLUEVIOLET.withAlpha(0.3)}   
       />
       <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/MCtoHF-LCP-LINE.geojson"} 
         onLoad={d => {d.entities.values.forEach(d => {
@@ -200,8 +201,9 @@ const renderMDOTsurface = React.useMemo(() => {
     )
   }, [GPS100]);
 
-  const position = Cartesian3.fromDegrees(-83.087383, 42.3317244, 100);
-  const pointGraphics = { pixelSize: 10 };
+
+
+  
   return  (
   <>
     
@@ -225,7 +227,7 @@ const renderMDOTsurface = React.useMemo(() => {
         
       </FormGroup>
     </div>
-    {/* <Entity position={position} point={pointGraphics} /> */}
+   
     {MDOTairTraffic && renderMDOTairTraffic} 
     {buildings && renderBuildings} 
     { GPS003 && renderGPS003 }

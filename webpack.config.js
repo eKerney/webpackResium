@@ -19,8 +19,16 @@ module.exports = (_env, args) => ({
 		{
 		  test: /\.css$/,
 		  use: ["style-loader", "css-loader" ]
-		}
-		],
+		},
+        {
+            test: /\.(jpe?g|png|gif|svg|glb)$/i, 
+            use: ["file-loader?name=src/images/[name].[ext]"]
+        },
+        {
+            test: /\.(jpe?g|png|gif|svg|glb)$/i, 
+            use: ["url-loader?limit=100000"]
+        }
+        ],
 	},
 	plugins: [
 		// new HtmlWebpackPlugin({
