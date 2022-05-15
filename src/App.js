@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef} from "react";
 import { Viewer, Scene, Globe, Camera, CameraLookAt, CameraFlyTo, Entity, Clock, Model, ModelGraphics, BillboardGraphics} from "resium";
-import { Cartesian3, Color, HeadingPitchRange, JulianDate, ClockRange, ClockStep, Math } from "cesium";
+import { Cartesian3, Color, HeadingPitchRange, JulianDate, ClockRange, ClockStep, Math, VelocityOrientationProperty } from "cesium";
 import axios from 'axios';
 // import { SocketProvider } from "./SocketProvider";
 // import { SocketPositions } from "./SocketPositions";
@@ -69,12 +69,17 @@ function App() {
       name="airplaneEntity"
       availability={new Cesium.TimeIntervalCollection([ new Cesium.TimeInterval({ start: start, stop: stop }) ])}
       position={positionProperty}
+      orientation={new VelocityOrientationProperty(positionProperty)}
       //point={{ pixelSize: 30, color: Cesium.Color.GREEN }}
       //path={new Cesium.PathGraphics({ width: 3 })}    
     >
-      <BillboardGraphics
+      {/* <BillboardGraphics
         image={drone}
         scale={0.2}
+      /> */}
+      <ModelGraphics
+      uri={drone3D}
+      minimumPixelSize={128}
       />
     </Entity>
   </React.Fragment>
