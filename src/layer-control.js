@@ -8,7 +8,7 @@ import { Viewer, Scene, Globe, Camera, CameraLookAt, CameraFlyTo, Entity} from "
 import { Cartesian3, Color, Math, HeadingPitchRange } from "cesium";
 
 function LayerControl(props) {
-  const [buildings, setBuildings ] = useState(true);
+  const [buildings, setBuildings ] = useState(false);
   const [GPS003, setGPS003 ] = useState(false);
   const [GPS050, setGPS050 ] = useState(false);
   const [GPS100, setGPS100 ] = useState(false);
@@ -65,7 +65,7 @@ const renderMDOTsurface = React.useMemo(() => {
   const renderDETroute = React.useMemo(() => {
     return (  
       <>
-      <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/MCtoHF-LCP-HEX-10-ATTR.json"} 
+      <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/MCStoFWH-LCP-HEX-10-ATTR.json"} 
         onLoad={d => {d.entities.values.forEach(d => {
           //console.log(d._properties);
           const hexHeight = d._properties.altitude - 25;
@@ -76,7 +76,7 @@ const renderMDOTsurface = React.useMemo(() => {
         }}  
         stroke={Color.BLUEVIOLET.withAlpha(0.3)}   
       />
-      <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/MCtoHF-LCP-LINE.geojson"} 
+      <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/MDOT_MCS_FWH_LINE.geojson"} 
         onLoad={d => {d.entities.values.forEach(d => {
           console.log(d.polyline);
           d.polyline.width = 5;
@@ -215,7 +215,7 @@ const renderMDOTsurface = React.useMemo(() => {
       <FormControlLabel control={<Checkbox name='BUILDINGS' checked={buildings} color="secondary" onChange={handleChange}/>} label="3D Buildings" />
         
         <FormControlLabel control={<Checkbox name='MDOTSURFACE' checked={MDOTsurface} color="secondary" onChange={handleChange}/>} label="MDOT Suitability Surface" />
-        <FormControlLabel control={<Checkbox name='DETROUTE' checked={DETroute} color="secondary" onChange={handleChange}/>} label="Central to Henry Ford LC Path" />
+        <FormControlLabel control={<Checkbox name='DETROUTE' checked={DETroute} color="secondary" onChange={handleChange}/>} label="Central to Ford HQ LC Path" />
 
         <FormControlLabel control={<Checkbox name='TEST' checked={testLayer} color="secondary" onChange={handleChange}/>} label="UAS Facility Map" />
         <FormControlLabel control={<Checkbox name='MDOT' checked={MDOTairTraffic} color="secondary" onChange={handleChange}/>} label="MDOT AIR Traffic Density" />
