@@ -8,7 +8,7 @@ import { Viewer, Scene, Globe, Camera, CameraLookAt, CameraFlyTo, Entity} from "
 import { Cartesian3, Color, Math, HeadingPitchRange } from "cesium";
 
 function LayerControl(props) {
-  const [buildings, setBuildings ] = useState(false);
+  const [buildings, setBuildings ] = useState(true);
   const [GPS003, setGPS003 ] = useState(false);
   const [GPS050, setGPS050 ] = useState(false);
   const [GPS100, setGPS100 ] = useState(false);
@@ -16,8 +16,8 @@ function LayerControl(props) {
   const [testLayer, setTestLayer ] = useState(false);
   const [GPSall, setGPSall ] = useState(false);
   const [MDOTcor, setMDOTcor ] = useState(false);
-  const [DETroute, setDETroute ] = useState(false);
-  const [MDOTsurface, setMDOTsurface ] = useState(false);
+  const [DETroute, setDETroute ] = useState(true);
+  const [MDOTsurface, setMDOTsurface ] = useState(true);
 
   const handleChange = (event) => {
     console.log('In handleChange()');
@@ -54,7 +54,7 @@ const renderMDOTsurface = React.useMemo(() => {
       onLoad={d => {d.entities.values.forEach(d => {
         const h = (d._properties.population);
         d.polygon.material = h > (50000) ? Color.RED.withAlpha(0.5) : h >= (25000) ? Color.ORANGERED.withAlpha(0.4) : 
-        h >= (10000) ? Color.ORANGE.withAlpha(0.3) : h >= (5000) ? Color.GREEN.withAlpha(0.2) : h >= (1000) ? Color.GREEN.withAlpha(0.1) : Color.LIGHTGREEN.withAlpha(0.1); 
+        h >= (10000) ? Color.ORANGE.withAlpha(0.2) : h >= (5000) ? Color.GREEN.withAlpha(0.1) : h >= (1000) ? Color.GREEN.withAlpha(0.0) : Color.LIGHTGREEN.withAlpha(0.0); 
         })
       }}  
       stroke={Color.BLUEVIOLET.withAlpha(0.0)}   
@@ -85,7 +85,7 @@ const renderMDOTsurface = React.useMemo(() => {
           // d.polygon.material = Color.DEEPPINK.withAlpha(0.4);
         })
         }}  
-        stroke={Color.BLUEVIOLET.withAlpha(0.5)}   
+        stroke={Color.BLUEVIOLET.withAlpha(0.4)}   
       />
       </>
     )
@@ -145,8 +145,8 @@ const renderMDOTsurface = React.useMemo(() => {
         onLoad={d => {d.entities.values.forEach(d => {
           d.polygon.extrudedHeight = (d._properties.median_hgt * 0.3048);
           const h = d._properties.median_hgt;
-          d.polygon.material = h > (700) ? Color.NAVY.withAlpha(0.5) : h > (400) ? Color.TEAL.withAlpha(0.4) : h > (200) ? Color.LIGHTSEAGREEN.withAlpha(0.4) : 
-          h > (100) ? Color.MEDIUMTURQUOISE.withAlpha(0.4) : h > (50) ? Color.PALETURQUOISE.withAlpha(0.3) : Color.ALICEBLUE.withAlpha(0.4); 
+          d.polygon.material = h > (700) ? Color.NAVY.withAlpha(0.4) : h > (400) ? Color.TEAL.withAlpha(0.3) : h > (200) ? Color.LIGHTSEAGREEN.withAlpha(0.2) : 
+          h > (100) ? Color.MEDIUMTURQUOISE.withAlpha(0.2) : h > (50) ? Color.PALETURQUOISE.withAlpha(0.2) : Color.ALICEBLUE.withAlpha(0.1); 
         })
         }}
         stroke={Color.AQUA.withAlpha(0.0)}
