@@ -13,26 +13,13 @@ import { color } from "@mui/system";
 //import droneTrans from 'https://raw.githubusercontent.com/eKerney/reactResiumSocket/main/src/uav4.png';
 //Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlMGY2Y2EwNy1lYjBjLTRlOTAtOTc4Yi01OGM4NTc5MTlhZWYiLCJpZCI6ODkzNTgsImlhdCI6MTY0OTcyNDM0OH0.d3owTfwWertUVKZyZ99sH-cWZJaPosgpJaotB5qmzJk';
 
-// var streetsLayer = new MapboxStyleImageryProvider({
-//   styleId: 'satellite-streets-v11',
-//   accessToken: 'pk.eyJ1IjoiZXJpY2tlcm5leSIsImEiOiJja2FjbTNiMXcwMXp1MzVueDFjdDNtcW92In0.LW0qdB-2FmA3UK51M67fAQ'
-// });
-
-// const streetsLayer = new UrlTemplateImageryProvider({
-//   url: `https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZXJpY2tlcm5leSIsImEiOiJja2FjbTNiMXcwMXp1MzVueDFjdDNtcW92In0.LW0qdB-2FmA3UK51M67fAQ`
+// const imageryProvider = new OpenStreetMapImageryProvider({
+//   url: 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/'
 // });
 
 const imageryProvider = new OpenStreetMapImageryProvider({
-  url: 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/'
+  url: 'https://{s}.basemaps.cartocdn.com/dark_all/'
 });
-
-// //Mapbox style provider
-// const mapbox = MapboxImageryProvider({
-//   styleId: 'streets-v11',
-//   accessToken: 'pk.eyJ1IjoiZXJpY2tlcm5leSIsImEiOiJja2FjbTNiMXcwMXp1MzVueDFjdDNtcW92In0.LW0qdB-2FmA3UK51M67fAQ',
-//   defaultAlpha: '0.5'
-// }); 
-
 
 const cameraStart = Cartesian3.fromDegrees(-83.08, 40.31, 60000);
 const cameraInit = Cartesian3.fromDegrees(-83.12, 42.32, 1500);
