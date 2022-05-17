@@ -20,7 +20,6 @@ function LayerControl(props) {
   const [MDOTsurface, setMDOTsurface ] = useState(true);
 
   const handleChange = (event) => {
-    console.log('In handleChange()');
     console.log(event.target.name);
     event.target.name === 'GPS003' ? setGPS003(GPS003 => !GPS003) : setGPS003(GPS003 => GPS003);
     event.target.name === 'GPS050' ? setGPS050(GPS050 => !GPS050) : setGPS050(GPS050 => GPS050);
@@ -67,22 +66,24 @@ const renderMDOTsurface = React.useMemo(() => {
       <>
       <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/MCStoFWH-LCP-HEX-10-ATTR.json"} 
         onLoad={d => {d.entities.values.forEach(d => {
-          //console.log(d._properties);
+          // extend launch/land hexes to ground
           const hexHeight = d._properties.altitude - 25;
-          d.polygon.height = hexHeight;
-          d.polygon.extrudedHeight = hexHeight + 25;
+          const last = d.entityCollection._entities._array[1].id;
+          const first = d.entityCollection._entities._array[d.entityCollection._entities._array.length-1].id;
+          d.id == first ? d.polygon.height = 0 : d.id == last ? d.polygon.height = 0 : d.polygon.height = hexHeight;
+          
+          //console.log(d.id, first, last);
+          d.polygon.extrudedHeight = hexHeight + 50;
           d.polygon.material = Color.DEEPPINK.withAlpha(0.2);
-        })
-        }}  
+        }) 
+        }}     
+_id
         stroke={Color.BLUEVIOLET.withAlpha(0.3)}   
       />
       <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/MDOT_MCS_FWH_LINE.geojson"} 
         onLoad={d => {d.entities.values.forEach(d => {
           console.log(d.polyline);
           d.polyline.width = 5;
-          //d.polyline.glowPower =  1;
-          // d.polygon.extrudedHeight = 300;
-          // d.polygon.material = Color.DEEPPINK.withAlpha(0.4);
         })
         }}  
         stroke={Color.BLUEVIOLET.withAlpha(0.4)}   
@@ -93,13 +94,7 @@ const renderMDOTsurface = React.useMemo(() => {
 
   const renderMDOTCor = React.useMemo(() => {
     return (  
-      <GeoJsonDataSource data={"https://services5.arcgis.com/DzCDf9ACTMZgB0Wd/ArcGIS/rest/services/Corridor/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="} 
-        // onLoad={d => {d.entities.values.forEach(d => {
-        //   console.log(d._properties);
-        //   h <= (200) ? Color.ORANGE.withAlpha(0.3) : h <= (300) ? Color.GREEN.withAlpha(0.2) : Color.LIGHTGREEN.withAlpha(0.2); 
-        // })
-        // }}  
-        //stroke={Color.GREY.withAlpha(0.5)}   
+      <GeoJsonDataSource data={"https://services5.arcgis.com/DzCDf9ACTMZgB0Wd/ArcGIS/rest/services/Corridor/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="}    
       />
     )
   }, [MDOTcor]);
@@ -112,7 +107,6 @@ const renderMDOTsurface = React.useMemo(() => {
           d.polygon.height = 0;
           //d.polygon.extrudedHeight = (d._properties.CEILING);
           d.polygon.extrudedHeight = h == (0) ? 1000 : h <= (50) ? 600 : h <= (100) ? 300 : h <= (200) ? 200 : h <= (300) ? 50 : 0; 
-
           d.polygon.material = h == (0) ? Color.RED.withAlpha(0.4) : h <= (100) ? Color.ORANGERED.withAlpha(0.4) : 
           h <= (200) ? Color.ORANGE.withAlpha(0.3) : h <= (300) ? Color.GREEN.withAlpha(0.3) : Color.LIGHTGREEN.withAlpha(0.3); 
         })
@@ -200,9 +194,6 @@ const renderMDOTsurface = React.useMemo(() => {
       />
     )
   }, [GPS100]);
-
-
-
   
   return  (
   <>
