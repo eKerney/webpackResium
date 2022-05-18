@@ -18,6 +18,7 @@ function LayerControl(props) {
   const [MDOTcor, setMDOTcor ] = useState(false);
   const [DETroute, setDETroute ] = useState(true);
   const [MDOTsurface, setMDOTsurface ] = useState(true);
+  const [MDOTbuildings, setMDOTbuildings ] = useState(true);
 
   const handleChange = (event) => {
     console.log(event.target.name);
@@ -77,7 +78,6 @@ const renderMDOTsurface = React.useMemo(() => {
           d.polygon.material = Color.DEEPPINK.withAlpha(0.2);
         }) 
         }}     
-_id
         stroke={Color.BLUEVIOLET.withAlpha(0.3)}   
       />
       <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/MDOT_MCS_FWH_LINE.geojson"} 
@@ -133,9 +133,23 @@ _id
     )
   }, [MDOTairTraffic]);
 
+  const renderMDOTbuildings = React.useMemo(() => {
+    return (
+      <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/mdotBuildings.geojson"} 
+        onLoad={d => {d.entities.values.forEach(d => {
+          d.polygon.extrudedHeight = 200;
+          d.polygon.material = Color.DEEPSKYBLUE.withAlpha(0.6)
+          const h = d._properties.median_hgt;
+        })
+        }}
+        stroke={Color.AQUA.withAlpha(0.0)}
+      />
+    )
+  }, [MDOTbuildings]);
+
   const renderBuildings = React.useMemo(() => {
     return (
-      <GeoJsonDataSource data={"https://services5.arcgis.com/UDWrEU6HdWNYIRIV/ArcGIS/rest/services/buildingsClippedDet/FeatureServer/0/query?where=1%3D1&geometry=-83.12%2C+42.25%2C+-83.02%2C+42.38&geometryType=esriGeometryEnvelope&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&sqlFormat=none&f=pgeojson&token="} 
+      <GeoJsonDataSource data={"https://services5.arcgis.com/UDWrEU6HdWNYIRIV/ArcGIS/rest/services/Building_Footprints_semcog/FeatureServer/0/query?where=1%3D1&geometry=-83.23%2C42.27%2C-83.02%2C42.38&geometryType=esriGeometryEnvelope&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=median_hgt&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="} 
         onLoad={d => {d.entities.values.forEach(d => {
           d.polygon.extrudedHeight = (d._properties.median_hgt * 0.3048);
           const h = d._properties.median_hgt;
@@ -218,7 +232,7 @@ _id
         
       </FormGroup>
     </div>
-   
+    {MDOTbuildings && renderMDOTbuildings}
     {MDOTairTraffic && renderMDOTairTraffic} 
     {buildings && renderBuildings} 
     { GPS003 && renderGPS003 }
