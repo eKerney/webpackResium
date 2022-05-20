@@ -7,6 +7,7 @@ import axios from 'axios';
 import LayerControl from "./layer-control";
 import React from "react";
 import drone from './/images/uav4.png';
+import arrow from './/images/arrowDark.glb';
 import plane3D from './/images/Cesium_Air.glb';
 import drone3D from './/images/drone.glb';
 import { color } from "@mui/system";
@@ -77,11 +78,10 @@ function App() {
         material={new Cesium.PolylineGlowMaterialProperty({ glowPower: 0.2, color: Color.YELLOW})}
       />
       <ModelGraphics
-      uri={drone3D}
-      minimumPixelSize={96}
-      max
-
+      uri={arrow}
+      minimumPixelSize={84}
       />
+      {/* <BillboardGraphics image={arrow} scale={0.1} /> */}
     </Entity>
   </React.Fragment>
 
@@ -105,7 +105,7 @@ function App() {
         stopTime={stop.clone()}
         clockRange={ClockRange.LOOP_STOP} // loop when we hit the end time
         clockStep={ClockStep.SYSTEM_CLOCK_MULTIPLIER}
-        multiplier={50} // how much time to advance each tick
+        multiplier={40} // how much time to advance each tick
         shouldAnimate={true} // Animation on by default
       />
 

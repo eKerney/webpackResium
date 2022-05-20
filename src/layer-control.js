@@ -75,7 +75,7 @@ const renderMDOTsurface = React.useMemo(() => {
           
           //console.log(d.id, first, last);
           d.polygon.extrudedHeight = hexHeight + 50;
-          d.polygon.material = Color.DEEPPINK.withAlpha(0.2);
+          d.polygon.material = Color.DEEPPINK.withAlpha(0.1);
         }) 
         }}     
         stroke={Color.BLUEVIOLET.withAlpha(0.3)}   
@@ -225,10 +225,10 @@ const renderMDOTsurface = React.useMemo(() => {
         <FormControlLabel control={<Checkbox name='TEST' checked={testLayer} color="secondary" onChange={handleChange}/>} label="UAS Facility Map" />
         <FormControlLabel control={<Checkbox name='MDOT' checked={MDOTairTraffic} color="secondary" onChange={handleChange}/>} label="MDOT AIR Traffic Density" />
         
-        <FormControlLabel control={<Checkbox name='GPS003' checked={GPS003} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 3 meters" />
+        {/* <FormControlLabel control={<Checkbox name='GPS003' checked={GPS003} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 3 meters" />
         <FormControlLabel control={<Checkbox name='GPS050' checked={GPS050} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 50 meters " />
         <FormControlLabel control={<Checkbox name='GPS100' checked={GPS100} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 100 meters " />
-        <FormControlLabel control={<Checkbox name='MDOTCOR' checked={MDOTcor} color="secondary" onChange={handleChange}/>} label="MDOT Corrdior" />
+        <FormControlLabel control={<Checkbox name='MDOTCOR' checked={MDOTcor} color="secondary" onChange={handleChange}/>} label="MDOT Corrdior" /> */}
         
       </FormGroup>
     </div>
