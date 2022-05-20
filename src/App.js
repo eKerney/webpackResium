@@ -8,6 +8,7 @@ import LayerControl from "./layer-control";
 import React from "react";
 import drone from './/images/uav4.png';
 import arrow from './/images/arrowDark.glb';
+import arrowLight from './/images/arrowLight.glb';
 import plane3D from './/images/Cesium_Air.glb';
 import drone3D from './/images/drone.glb';
 import { color } from "@mui/system";
@@ -78,8 +79,8 @@ function App() {
         material={new Cesium.PolylineGlowMaterialProperty({ glowPower: 0.2, color: Color.YELLOW})}
       />
       <ModelGraphics
-      uri={arrow}
-      minimumPixelSize={96}
+      uri={arrowLight}
+      minimumPixelSize={64}
       />
       {/* <BillboardGraphics image={arrow} scale={0.1} /> */}
     </Entity>
