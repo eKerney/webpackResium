@@ -81,7 +81,8 @@ function App() {
       />
       <ModelGraphics
       uri={arrowASL}
-      minimumPixelSize={84}
+      minimumPixelSize={96}
+      maximumScale={5000}
       />
       {/* <BillboardGraphics image={arrow} scale={0.1} /> */}
     </Entity>
