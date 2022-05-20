@@ -79,7 +79,7 @@ function App() {
       />
       <ModelGraphics
       uri={arrow}
-      minimumPixelSize={84}
+      minimumPixelSize={96}
       />
       {/* <BillboardGraphics image={arrow} scale={0.1} /> */}
     </Entity>
