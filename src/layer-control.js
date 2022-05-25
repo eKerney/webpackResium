@@ -149,12 +149,12 @@ const renderMDOTsurface = React.useMemo(() => {
 
   const renderBuildings = React.useMemo(() => {
     return (
-      <GeoJsonDataSource data={"https://services5.arcgis.com/UDWrEU6HdWNYIRIV/ArcGIS/rest/services/Building_Footprints_semcog/FeatureServer/0/query?where=1%3D1&geometry=-83.23%2C42.27%2C-83.02%2C42.38&geometryType=esriGeometryEnvelope&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=median_hgt&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="} 
+      <GeoJsonDataSource data={"https://services5.arcgis.com/UDWrEU6HdWNYIRIV/ArcGIS/rest/services/Building_Footprints_semcog/FeatureServer/0/query?where=1%3D1&geometry=-83.22%2C42.28%2C-83.02%2C42.37&geometryType=esriGeometryEnvelope&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=median_hgt&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="} 
         onLoad={d => {d.entities.values.forEach(d => {
-          d.polygon.extrudedHeight = (d._properties.median_hgt * 0.3048);
+          d.polygon.extrudedHeight = (d._properties.median_hgt * 0.3048) * 2;
           const h = d._properties.median_hgt;
-          d.polygon.material = h > (700) ? Color.NAVY.withAlpha(0.4) : h > (400) ? Color.TEAL.withAlpha(0.3) : h > (200) ? Color.LIGHTSEAGREEN.withAlpha(0.2) : 
-          h > (100) ? Color.MEDIUMTURQUOISE.withAlpha(0.2) : h > (50) ? Color.PALETURQUOISE.withAlpha(0.2) : Color.ALICEBLUE.withAlpha(0.1); 
+          d.polygon.material = h > (700) ? Color.NAVY.withAlpha(0.5) : h > (400) ? Color.TEAL.withAlpha(0.4) : h > (200) ? Color.LIGHTSEAGREEN.withAlpha(0.3) : 
+          h > (100) ? Color.MEDIUMTURQUOISE.withAlpha(0.3) : h > (50) ? Color.PALETURQUOISE.withAlpha(0.2) : Color.ALICEBLUE.withAlpha(0.1); 
         })
         }}
         stroke={Color.AQUA.withAlpha(0.0)}
@@ -214,7 +214,7 @@ const renderMDOTsurface = React.useMemo(() => {
     
     <div className="control-panel">
     <h2>AIRHUB SPHERE <br/> **DRAFT**</h2>
-        <hr style={{width: '800px', marginLeft: '-100px', marginTop: '26px'}}/>
+        <hr style={{width: '600px', marginLeft: '-100px', marginTop: '26px'}}/>
         <br />
       <FormGroup>
       <FormControlLabel control={<Checkbox name='BUILDINGS' checked={buildings} color="secondary" onChange={handleChange}/>} label="3D Buildings" />

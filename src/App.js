@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef} from "react";
 import { Viewer, Scene, Globe, Camera, CameraLookAt, CameraFlyTo, Entity, Clock, Model, ModelGraphics, BillboardGraphics, PathGraphics} from "resium";
-import { IonImageryProvider, Cartesian3, Color, HeadingPitchRange, JulianDate, ClockRange, ClockStep, Math, VelocityOrientationProperty, ImageryLayer, ArcGisMapServerImageryProvider, MapboxImageryProvider, MapboxStyleImageryProvider, UrlTemplateImageryProvider, OpenStreetMapImageryProvider } from "cesium";
+import { IonImageryProvider, Cartesian3, Color, HeadingPitchRange, JulianDate, ClockRange, ClockStep, Math, VelocityOrientationProperty, ImageryLayer, ArcGisMapServerImageryProvider, MapboxImageryProvider, MapboxStyleImageryProvider, UrlTemplateImageryProvider, OpenStreetMapImageryProvider, Cesium3DTileset } from "cesium";
 import axios from 'axios';
 // import { SocketProvider } from "./SocketProvider";
 // import { SocketPositions } from "./SocketPositions";
@@ -15,13 +15,14 @@ import drone3D from './/images/drone.glb';
 import { color } from "@mui/system";
 //import droneTrans from 'https://raw.githubusercontent.com/eKerney/reactResiumSocket/main/src/uav4.png';
 
-//Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlMGY2Y2EwNy1lYjBjLTRlOTAtOTc4Yi01OGM4NTc5MTlhZWYiLCJpZCI6ODkzNTgsImlhdCI6MTY0OTcyNDM0OH0.d3owTfwWertUVKZyZ99sH-cWZJaPosgpJaotB5qmzJk';
+Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlMGY2Y2EwNy1lYjBjLTRlOTAtOTc4Yi01OGM4NTc5MTlhZWYiLCJpZCI6ODkzNTgsImlhdCI6MTY0OTcyNDM0OH0.d3owTfwWertUVKZyZ99sH-cWZJaPosgpJaotB5qmzJk';
 // const imageryProvider = new OpenStreetMapImageryProvider({
 //   url: 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/'
 // });
 const imageryProvider = new OpenStreetMapImageryProvider({
   url: 'https://{s}.basemaps.cartocdn.com/dark_all/'
 });
+
 
 const cameraStart = Cartesian3.fromDegrees(-83.00, 42.25, 1500);
 const cameraInit = Cartesian3.fromDegrees(-83.03, 42.33, 1500);
@@ -81,8 +82,8 @@ function App() {
       />
       <ModelGraphics
       uri={arrowASL}
-      minimumPixelSize={96}
-      maximumScale={5000}
+      minimumPixelSize={164}
+      maximumScale={6000}
       />
       {/* <BillboardGraphics image={arrow} scale={0.1} /> */}
     </Entity>
