@@ -245,7 +245,7 @@ const renderDETroute = React.useMemo(() => {
     
     <div className="control-panel">
     <h2>AIRHUB SPHERE <br/> **DRAFT**</h2>
-        <hr style={{width: '600px', marginLeft: '-100px', marginTop: '26px'}}/>
+        <hr style={{width: '700px', marginLeft: '-100px', marginTop: '26px'}}/>
         <br />
       <FormGroup>
       <FormControlLabel control={<Checkbox name='BUILDINGS' checked={buildings} color="secondary" onChange={handleChange}/>} label="3D Buildings" />
@@ -256,10 +256,10 @@ const renderDETroute = React.useMemo(() => {
         <FormControlLabel control={<Checkbox name='TEST' checked={testLayer} color="secondary" onChange={handleChange}/>} label="UAS Facility Map" />
         <FormControlLabel control={<Checkbox name='MDOT' checked={MDOTairTraffic} color="secondary" onChange={handleChange}/>} label="MDOT AIR Traffic Density" />
         
-        {/* <FormControlLabel control={<Checkbox name='GPS003' checked={GPS003} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 3 meters" />
+        <FormControlLabel control={<Checkbox name='GPS003' checked={GPS003} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 3 meters" />
         <FormControlLabel control={<Checkbox name='GPS050' checked={GPS050} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 50 meters " />
         <FormControlLabel control={<Checkbox name='GPS100' checked={GPS100} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 100 meters " />
-        <FormControlLabel control={<Checkbox name='MDOTCOR' checked={MDOTcor} color="secondary" onChange={handleChange}/>} label="MDOT Corrdior" /> */}
+        {/* <FormControlLabel control={<Checkbox name='MDOTCOR' checked={MDOTcor} color="secondary" onChange={handleChange}/>} label="MDOT Corrdior" /> */}
         
       </FormGroup>
     </div>
