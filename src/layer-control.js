@@ -4,7 +4,9 @@ import { FormControlLabel, FormGroup } from '@mui/material';
 import {useState, useEffect, useMemo, useCallback, useRef} from 'react';
 import { GeoJsonDataSource } from 'resium';
 import { Viewer, Scene, Globe, Camera, CameraLookAt, CameraFlyTo, Entity} from "resium";
-import { Cartesian3, Color, Math, HeadingPitchRange } from "cesium";
+import { Cartesian3, Color, Math, HeadingPitchRange, CheckerboardMaterialProperty, StripeMaterialProperty, } from "cesium";
+//import CheckerboardMaterialProperty from 'cesium/Source/DataSources/CheckerboardMaterialProperty';
+//import PolylineDashMaterialProperty from 'cesium';
 
 function LayerControl(props) {
   const [buildings, setBuildings ] = useState(false);
@@ -19,6 +21,7 @@ function LayerControl(props) {
   const [HProute, setHProute ] = useState(true);
   const [MDOTsurface, setMDOTsurface ] = useState(true);
   const [MDOTbuildings, setMDOTbuildings ] = useState(true);
+  const [OBSTACLES, setObstacles ] = useState(true);
 
   const handleChange = (event) => {
     console.log(event.target.name);
@@ -33,6 +36,7 @@ function LayerControl(props) {
     event.target.name === 'DETROUTE' ? setDETroute(!DETroute) : setDETroute(DETroute);
     event.target.name === 'HPROUTE' ? setHProute(!HProute) : setHProute(HProute);
     event.target.name === 'MDOTSURFACE' ? setMDOTsurface(!MDOTsurface) : setMDOTsurface(MDOTsurface);
+    event.target.name === 'OBSTACLES' ? setObstacles(!OBSTACLES) : setObstacles(OBSTACLES);
   };
   const pdopColor = {
     1:Color.GREEN, 2:Color.CHARTREUSE, 3:Color.GREENYELLOW, 4:Color.YELLOW, 5:Color.DARKORANGE, 6:Color.RED
@@ -48,6 +52,30 @@ function LayerControl(props) {
     '-99999':Color.GREY.withAlpha(0.3)
   };
 // 
+
+const renderObstacles = React.useMemo(() => {
+  return (
+    <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/wayneGroundObs.geojson"} 
+      onLoad={d => {d.entities.values.forEach(d => {
+        d.polygon.height = 0;
+        d.polygon.extrudedHeight = d._properties.Obs_AGL * 2
+        const h = d._properties.Obs_AGL;
+        d.polygon.material = Color.GOLD.withAlpha(0.2)
+        // d.polygon.material = new StripeMaterialProperty({
+        //   evenColor: Color.GOLD.withAlpha(0.5),
+        //   oddColor: Color.BLACK.withAlpha(0.1),
+        //   repeat: 10
+        // });
+        // d.polygon.material = h > (90) ? Color.FIREBRICK.withAlpha(0.7) : h > (80) ? Color.ORANGERED.withAlpha(0.6) : 
+        // h > (70) ? Color.CORAL.withAlpha(0.5) : h > (60) ? Color.GOLD.withAlpha(0.4) : 
+        // h > (50) ? Color.LIGHTGOLDENRODYELLOW.withAlpha(0.4) : 
+        // Color.LIGHTGOLDENRODYELLOW.withAlpha(0.2);                     
+        })
+      }}
+      stroke={Color.GOLD.withAlpha(0.1)}
+    /> 
+  )
+}, [OBSTACLES]);
 
 const renderMDOTsurface = React.useMemo(() => {
   return (  
@@ -192,6 +220,9 @@ const renderDETroute = React.useMemo(() => {
       />
     )
   }, [buildings]);
+  // https://raw.githubusercontent.com/eKerney/dataStore2/main/wayneGroundObs.geojson
+
+ 
 
   const renderGPS003 = React.useMemo(() => {
     return (
@@ -255,7 +286,7 @@ const renderDETroute = React.useMemo(() => {
         <FormControlLabel control={<Checkbox name='HPROUTE' checked={HProute} color="secondary" onChange={handleChange}/>} label="Central to Huntington PL LC Path" />
         <FormControlLabel control={<Checkbox name='TEST' checked={testLayer} color="secondary" onChange={handleChange}/>} label="UAS Facility Map" />
         <FormControlLabel control={<Checkbox name='MDOT' checked={MDOTairTraffic} color="secondary" onChange={handleChange}/>} label="MDOT AIR Traffic Density" />
-        
+        <FormControlLabel control={<Checkbox name='OBSTACLES' checked={OBSTACLES} color="secondary" onChange={handleChange}/>} label="Ground Obstacles > 50 ft AGL" />
         <FormControlLabel control={<Checkbox name='GPS003' checked={GPS003} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 3 meters" />
         <FormControlLabel control={<Checkbox name='GPS050' checked={GPS050} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 50 meters " />
         <FormControlLabel control={<Checkbox name='GPS100' checked={GPS100} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 100 meters " />
@@ -274,6 +305,7 @@ const renderDETroute = React.useMemo(() => {
     { DETroute && renderDETroute }
     { HProute && renderHProute }
     { MDOTsurface && renderMDOTsurface }
+    { OBSTACLES && renderObstacles}
       {/* { MDOTairTraffic && 
       <GeoJSON dataURL={'https://raw.githubusercontent.com/eKerney/dataStore/main/mdotDensitySelection.geojson'} 
         symbolObj={pdopColor} heightExtrude={[0,100]} symbolProp={'density'} />
