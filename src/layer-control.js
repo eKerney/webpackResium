@@ -60,20 +60,15 @@ const renderMTRroutes = React.useMemo(() => {
   return (
     <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/Insights_Data_Military_Training_Routes_Polyline.geojson"} 
     onLoad={d => {d.entities.values.forEach(d => {
-      //console.log(d.polyline.positions);
-   
       const alt1 = d.properties.CRS_ALT1.toString();
-      
       const alt = +alt1.replace(/[^0-9.]/g,"");
-      console.log(alt/1000);
-      //d.polyline.material = Color.BLUE.withAlpha(0.5);
+      console.log(alt);
+      const s = d.polyline.positions._value[0], e = d.polyline.positions._value[1]; 
+      (s.z = s.z + alt*10), (e.z = e.z + alt*10);
+      d.polyline.positions._value = [s, e]
+
       d.polyline.material = new Cesium.Color(alt/1000, 0.5 - alt/1000, 0.5, 0.5)
-      d.polyline.width = 3;
-      //d.polyline.extrudedHeight = 5000;
-      //console.log(d._polyline);
-      //'polyline' in d ? console.log(d.polyline) : '';
-      //'_polyline' in d ? '' : console.log(d._polyline);
-      //d.polyline.width = 5;                  
+      d.polyline.width = 3;                 
         })
       }}
       //stroke={Color.WHEAT.withAlpha(0.5)}
