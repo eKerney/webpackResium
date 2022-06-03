@@ -20,9 +20,10 @@ function LayerControl(props) {
   const [MDOTcor, setMDOTcor ] = useState(false);
   const [DETroute, setDETroute ] = useState(true);
   const [HProute, setHProute ] = useState(true);
-  const [MDOTsurface, setMDOTsurface ] = useState(false);
+  const [HFroute, setHFroute ] = useState(true);
+  const [MDOTsurface, setMDOTsurface ] = useState(true);
   const [MDOTbuildings, setMDOTbuildings ] = useState(true);
-  const [OBSTACLES, setObstacles ] = useState(false);
+  const [OBSTACLES, setObstacles ] = useState(true);
   const [MTR, setMTR ] = useState(false);
 
   const handleChange = (event) => {
@@ -37,6 +38,7 @@ function LayerControl(props) {
     event.target.name === 'MDOTCOR' ? setMDOTcor(!MDOTcor) : setMDOTcor(MDOTcor);
     event.target.name === 'DETROUTE' ? setDETroute(!DETroute) : setDETroute(DETroute);
     event.target.name === 'HPROUTE' ? setHProute(!HProute) : setHProute(HProute);
+    event.target.name === 'HFROUTE' ? setHFroute(!HFroute) : setHFroute(HFroute);
     event.target.name === 'MDOTSURFACE' ? setMDOTsurface(!MDOTsurface) : setMDOTsurface(MDOTsurface);
     event.target.name === 'OBSTACLES' ? setObstacles(!OBSTACLES) : setObstacles(OBSTACLES);
     event.target.name === 'MTR' ? setMTR(!MTR) : setMTR(MTR);
@@ -115,6 +117,36 @@ const renderMDOTsurface = React.useMemo(() => {
   )
 }, [MDOTsurface]);
 
+const renderHFroute = React.useMemo(() => {
+  return (  
+    <>
+    <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/MCtoHF-LCP-HEX-10.json"} 
+      onLoad={d => {d.entities.values.forEach(d => {
+        // extend launch/land hexes to ground
+        // const hexHeight = d._properties.altitude - 25;
+        // const last = d.entityCollection._entities._array[1].id;
+        // const first = d.entityCollection._entities._array[d.entityCollection._entities._array.length-1].id;
+        // d.id == first ? d.polygon.height = 0 : d.id == last ? d.polygon.height = 0 : d.polygon.height = hexHeight;
+        
+        // //console.log(d.id, first, last);
+        // d.polygon.extrudedHeight = hexHeight + 100;
+        // d.polygon.material = Color.AZURE.withAlpha(0.3);
+      }) 
+      }}     
+      stroke={Color.FUCHSIA.withAlpha(0.3)}   
+    />
+    <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/MCtoHF-LCP-LINE.geojson"} 
+      onLoad={d => {d.entities.values.forEach(d => {
+        console.log(d.polyline);
+        d.polyline.width = 5;
+      })
+      }}  
+      stroke={Color.VIOLET.withAlpha(0.3)}   
+    />
+    </>
+  )
+}, [HFroute]);
+
 const renderHProute = React.useMemo(() => {
   return (  
     <>
@@ -127,8 +159,8 @@ const renderHProute = React.useMemo(() => {
         d.id == first ? d.polygon.height = 0 : d.id == last ? d.polygon.height = 0 : d.polygon.height = hexHeight;
         
         //console.log(d.id, first, last);
-        d.polygon.extrudedHeight = hexHeight + 50;
-        d.polygon.material = Color.CRIMSON.withAlpha(0.2);
+        d.polygon.extrudedHeight = hexHeight + 75
+        d.polygon.material = Color.CRIMSON.withAlpha(0.3);
       }) 
       }}     
       stroke={Color.FUCHSIA.withAlpha(0.4)}   
@@ -246,7 +278,6 @@ const renderDETroute = React.useMemo(() => {
   }, [buildings]);
   // https://raw.githubusercontent.com/eKerney/dataStore2/main/wayneGroundObs.geojson
 
- 
 
   const renderGPS003 = React.useMemo(() => {
     return (
@@ -308,13 +339,16 @@ const renderDETroute = React.useMemo(() => {
         <FormControlLabel control={<Checkbox name='MDOTSURFACE' checked={MDOTsurface} color="secondary" onChange={handleChange}/>} label="MDOT Suitability Surface" />
         <FormControlLabel control={<Checkbox name='DETROUTE' checked={DETroute} color="secondary" onChange={handleChange}/>} label="Central to Ford HQ LC Path" />
         <FormControlLabel control={<Checkbox name='HPROUTE' checked={HProute} color="secondary" onChange={handleChange}/>} label="Central to Huntington PL LC Path" />
+        <FormControlLabel control={<Checkbox name='HFROUTE' checked={HFroute} color="secondary" onChange={handleChange}/>} label="Central to Henry Ford Hospital LC Path" />
+        <FormControlLabel control={<Checkbox name='MTR' checked={MTR} color="secondary" onChange={handleChange}/>} label="Insights MTR Routes - IR,VR,SR " />
+        <FormControlLabel control={<Checkbox name='OBSTACLES' checked={OBSTACLES} color="secondary" onChange={handleChange}/>} label="Ground Obstacles > 50 ft AGL" />
         <FormControlLabel control={<Checkbox name='TEST' checked={testLayer} color="secondary" onChange={handleChange}/>} label="UAS Facility Map" />
         <FormControlLabel control={<Checkbox name='MDOT' checked={MDOTairTraffic} color="secondary" onChange={handleChange}/>} label="MDOT AIR Traffic Density" />
-        <FormControlLabel control={<Checkbox name='OBSTACLES' checked={OBSTACLES} color="secondary" onChange={handleChange}/>} label="Ground Obstacles > 50 ft AGL" />
+        
         <FormControlLabel control={<Checkbox name='GPS003' checked={GPS003} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 3 meters" />
         <FormControlLabel control={<Checkbox name='GPS050' checked={GPS050} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 50 meters " />
         <FormControlLabel control={<Checkbox name='GPS100' checked={GPS100} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 100 meters " />
-        <FormControlLabel control={<Checkbox name='MTR' checked={MTR} color="secondary" onChange={handleChange}/>} label="Insights MTR Routes - IR,VR,SR " />
+        
         {/* <FormControlLabel control={<Checkbox name='MDOTCOR' checked={MDOTcor} color="secondary" onChange={handleChange}/>} label="MDOT Corrdior" /> */}
         
       </FormGroup>
@@ -332,6 +366,7 @@ const renderDETroute = React.useMemo(() => {
     { MDOTsurface && renderMDOTsurface }
     { OBSTACLES && renderObstacles}
     { MTR && renderMTRroutes}
+    { HFroute && renderHFroute }
       {/* { MDOTairTraffic && 
       <GeoJSON dataURL={'https://raw.githubusercontent.com/eKerney/dataStore/main/mdotDensitySelection.geojson'} 
         symbolObj={pdopColor} heightExtrude={[0,100]} symbolProp={'density'} />
