@@ -120,20 +120,20 @@ const renderMDOTsurface = React.useMemo(() => {
 const renderHFroute = React.useMemo(() => {
   return (  
     <>
-    <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/MCtoHF-LCP-HEX-10.json"} 
+    <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/MCtoHF-LCP-HEX-10-ATTR.json"} 
       onLoad={d => {d.entities.values.forEach(d => {
         // extend launch/land hexes to ground
-        // const hexHeight = d._properties.altitude - 25;
-        // const last = d.entityCollection._entities._array[1].id;
-        // const first = d.entityCollection._entities._array[d.entityCollection._entities._array.length-1].id;
-        // d.id == first ? d.polygon.height = 0 : d.id == last ? d.polygon.height = 0 : d.polygon.height = hexHeight;
+        const hexHeight = d._properties.altitude - 25;
+        const last = d.entityCollection._entities._array[1].id;
+        const first = d.entityCollection._entities._array[d.entityCollection._entities._array.length-1].id;
+        d.id == first ? d.polygon.height = 0 : d.id == last ? d.polygon.height = 0 : d.polygon.height = hexHeight;
         
-        // //console.log(d.id, first, last);
-        // d.polygon.extrudedHeight = hexHeight + 100;
-        // d.polygon.material = Color.AZURE.withAlpha(0.3);
+        //console.log(d.id, first, last);
+        d.polygon.extrudedHeight = hexHeight + 100;
+        d.polygon.material = Color.CADETBLUE.withAlpha(0.3);
       }) 
       }}     
-      stroke={Color.FUCHSIA.withAlpha(0.3)}   
+      stroke={Color.CADETBLUE.withAlpha(0.3)}   
     />
     <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore2/main/MCtoHF-LCP-LINE.geojson"} 
       onLoad={d => {d.entities.values.forEach(d => {
