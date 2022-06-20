@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef} from "react";
-import { Viewer, Scene, Globe, Camera, CameraLookAt, CameraFlyTo, Entity, Clock, Model, ModelGraphics, BillboardGraphics, PathGraphics} from "resium";
-import { IonImageryProvider, Cartesian3, Color, HeadingPitchRange, JulianDate, ClockRange, ClockStep, Math, VelocityOrientationProperty, ImageryLayer, ArcGisMapServerImageryProvider, MapboxImageryProvider, MapboxStyleImageryProvider, UrlTemplateImageryProvider, OpenStreetMapImageryProvider, Cesium3DTileset } from "cesium";
+import { Viewer, Camera, CameraLookAt, CameraFlyTo, Entity, Clock, ModelGraphics, PathGraphics, Cesium3DTileset} from "resium";
+import { Cartesian3, Color, HeadingPitchRange, JulianDate, ClockRange, ClockStep, Math, VelocityOrientationProperty, OpenStreetMapImageryProvider, IonResource, createWorldTerrain} from "cesium";
 // import { SocketProvider } from "./SocketProvider";
 // import { SocketPositions } from "./SocketPositions";
 import LayerControl from "./layer-control";
@@ -15,7 +15,7 @@ Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOi
 const imageryProvider = new OpenStreetMapImageryProvider({
   url: 'https://{s}.basemaps.cartocdn.com/dark_all/'
 });
-
+const terrainProvider = createWorldTerrain();
 
 const cameraStart = Cartesian3.fromDegrees(-83.00, 42.25, 1500);
 const cameraInit = Cartesian3.fromDegrees(-83.03, 42.33, 1500);
@@ -39,51 +39,9 @@ function App() {
   const start = Cesium.JulianDate.fromIso8601("2020-03-09T23:10:00Z");
   const stop = Cesium.JulianDate.addSeconds(start, totalSeconds, new Cesium.JulianDate());
 
-  const positionProperty = new Cesium.SampledPositionProperty();   
-
-  for (let i = 0; i < positions.length; i++) {
-    const dataPoint = positions[i];
-    // Declare the time for this individual sample and store it in a new JulianDate instance.
-    const time = Cesium.JulianDate.addSeconds(start, i * timeStepInSeconds, new Cesium.JulianDate());
-    const position = Cesium.Cartesian3.fromDegrees(dataPoint[0], dataPoint[1], dataPoint[2]);
-    // Store the position along with its timestamp.
-    // Here we add the positions all upfront, but these can be added at run-time as samples are received from a server.
-    positionProperty.addSample(time, position);
-
-  // add flight points to map if needed
-  //   if (ref.current) {
-  //     ref.current.cesiumElement.entities.add({
-  //     description: `Location: (${dataPoint[0]}, ${dataPoint[1]}, ${dataPoint[2]})`,
-  //     position: position,
-  //     point: { pixelSize: 10, color: Color.PURPLE.withAlpha(0.5) }
-  //   });
-  // }
-};
-//console.log(positionProperty);
-  const airplaneEntity = <React.Fragment>
-    <Entity
-      name="airplaneEntity"
-      availability={new Cesium.TimeIntervalCollection([ new Cesium.TimeInterval({ start: start, stop: stop }) ])}
-      position={positionProperty}
-      orientation={new VelocityOrientationProperty(positionProperty)}
-    >
-      <PathGraphics 
-        width={0}
-        leadTime={100}
-        trailTime={500}
-        material={new Cesium.PolylineGlowMaterialProperty({ glowPower: 0.2, color: Color.YELLOW})}
-      />
-      <ModelGraphics
-      uri={arrowASL}
-      minimumPixelSize={0}
-      maximumScale={0}
-      />
-      {/* <BillboardGraphics image={arrow} scale={0.1} /> */}
-    </Entity>
-  </React.Fragment>
-
   return (
     <Viewer full
+        // terrainProvider={terrainProvider}
         ref={ref}
         baseLayerPicker={true}
         infoBox={true}
@@ -93,7 +51,7 @@ function App() {
         shadows={true}
         fullscreenButton={false}
         animation={true}
-        trackedEntity={airplaneEntity}  
+        
         imageryProvider={imageryProvider}
     >
         <Clock 
@@ -105,7 +63,12 @@ function App() {
         multiplier={30} // how much time to advance each tick
         shouldAnimate={true} // Animation on by default
       />
-      { airplaneEntity }
+      {/* { airplaneEntity } */}
+      {/* 3D OSM Building Tiles */}
+      {/* <Cesium3DTileset 
+        immediatelyLoadDesiredLevelOfDetail={true}
+        url={IonResource.fromAssetId(96188)}
+      /> */}
     
     
       <Camera position={cameraInit}>
@@ -116,11 +79,11 @@ function App() {
             />
            <AnimateRoute 
             url={"https://raw.githubusercontent.com/eKerney/dataStore2/main/MDOT_MCS_FWH_PTS.geojson"}
-            timeStepSec={25} width={10} color={Color.YELLOW}
+            timeStepSec={25} width={10} color={Color.AQUA}
             />
             <AnimateRoute 
             url={"https://raw.githubusercontent.com/eKerney/dataStore2/main/MCtoHF-LCP-10-PTS.geojson"}
-            timeStepSec={100} width={10} color={Color.BLUEVIOLET}
+            timeStepSec={70} width={10} color={Color.AQUA}
             />
             
         {/*
