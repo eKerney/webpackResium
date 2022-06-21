@@ -3,8 +3,8 @@ import Checkbox from '@mui/material/Checkbox';
 import { FormControlLabel, FormGroup } from '@mui/material';
 import {useState, useEffect, useMemo, useCallback, useRef} from 'react';
 import { GeoJsonDataSource } from 'resium';
-import { Viewer, Scene, Globe, Camera, CameraLookAt, CameraFlyTo, Entity} from "resium";
-import { Cartesian3, Color, Math, HeadingPitchRange, CheckerboardMaterialProperty, StripeMaterialProperty, } from "cesium";
+import { Viewer, Scene, Globe, Camera, CameraLookAt, CameraFlyTo, Entity, Cesium3DTileset} from "resium";
+import { Cartesian3, Color, Math, HeadingPitchRange, CheckerboardMaterialProperty, StripeMaterialProperty, IonResource} from "cesium";
 import { alignProperty } from '@mui/material/styles/cssUtils';
 //import CheckerboardMaterialProperty from 'cesium/Source/DataSources/CheckerboardMaterialProperty';
 //import PolylineDashMaterialProperty from 'cesium';
@@ -25,6 +25,7 @@ function LayerControl(props) {
   const [MDOTbuildings, setMDOTbuildings ] = useState(true);
   const [OBSTACLES, setObstacles ] = useState(true);
   const [MTR, setMTR ] = useState(false);
+  const [OSM, setOSM ] = useState(true);
 
   const handleChange = (event) => {
     console.log(event.target.name);
@@ -42,6 +43,7 @@ function LayerControl(props) {
     event.target.name === 'MDOTSURFACE' ? setMDOTsurface(!MDOTsurface) : setMDOTsurface(MDOTsurface);
     event.target.name === 'OBSTACLES' ? setObstacles(!OBSTACLES) : setObstacles(OBSTACLES);
     event.target.name === 'MTR' ? setMTR(!MTR) : setMTR(MTR);
+    event.target.name === 'OSM' ? setOSM(!OSM) : setOSM(OSM);
   };
   const pdopColor = {
     1:Color.GREEN, 2:Color.CHARTREUSE, 3:Color.GREENYELLOW, 4:Color.YELLOW, 5:Color.DARKORANGE, 6:Color.RED
@@ -57,6 +59,15 @@ function LayerControl(props) {
     '-99999':Color.GREY.withAlpha(0.3)
   };
 // https://raw.githubusercontent.com/eKerney/dataStore2/main/Insights_Data_Military_Training_Routes_Polyline.geojson
+
+const renderOSM3Dtiles = React.useMemo(() => {
+  return (
+      <Cesium3DTileset 
+        immediatelyLoadDesiredLevelOfDetail={true}
+        url={IonResource.fromAssetId(96188)}
+      /> 
+  )
+}, [OSM]);
 
 const renderMTRroutes = React.useMemo(() => {
   return (
@@ -342,6 +353,7 @@ const renderDETroute = React.useMemo(() => {
         <FormControlLabel control={<Checkbox name='MTR' checked={MTR} color="secondary" onChange={handleChange}/>} label="Insights MTR Routes - IR,VR,SR " />
         <FormControlLabel control={<Checkbox name='BUILDINGS' checked={buildings} color="secondary" onChange={handleChange}/>} label="3D Buildings" />
         <FormControlLabel control={<Checkbox name='TEST' checked={testLayer} color="secondary" onChange={handleChange}/>} label="UAS Facility Map" />
+        <FormControlLabel control={<Checkbox name='OSM' checked={OSM} color="secondary" onChange={handleChange}/>} label="OSM 3D Tile Buildings" />
         {/* <FormControlLabel control={<Checkbox name='MDOT' checked={MDOTairTraffic} color="secondary" onChange={handleChange}/>} label="MDOT AIR Traffic Density" /> */}
         
         {/* <FormControlLabel control={<Checkbox name='GPS003' checked={GPS003} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 3 meters" />
@@ -366,6 +378,7 @@ const renderDETroute = React.useMemo(() => {
     { OBSTACLES && renderObstacles}
     { MTR && renderMTRroutes}
     { HFroute && renderHFroute }
+    { OSM && renderOSM3Dtiles }
   </>
   )    
 }
